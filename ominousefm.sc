@@ -1,4 +1,4 @@
-Engine_MacroE_v1b : CroneEngine {
+Engine_ominousefm : CroneEngine {
   
 var <synth;
   *new { arg context, doneCallback;
@@ -7,14 +7,14 @@ var <synth;
 
   alloc {
   
-    SynthDef(\MacroOmi, {
+    SynthDef(\ominousefm, {
 			arg out, audio_in=0, gate=0, pit=48, contour=0.2, detune=0.25, level1=0.5,  level2=0.5, ratio1=0.5, ratio2=0.5, fm1=0, fm2=0, fb=0, xfb=0, filter_mode=0, cutoff=0.5, reson=0, strength=0.5, env=0.5, rotate=0.2, space=0.5, mul=0.5, add=0, revtime=0.5, drywet=0.1, damping=0.3, hp=0.0, freeze=0, diffusion=0.625, ffreq=22000, fq=0, mode=0, inputgain=1.0, noiselev=0.0003;
 			var sound;
 			sound = DFM1.ar(MiOmi.ar(audio_in, gate, pit, contour, detune,
 			level1, level2, ratio1, ratio2, fm1, fm2, fb, xfb, filter_mode,
 			cutoff, reson, strength, env, rotate, space, mul, add), ffreq, fq, inputgain, mode, noiselev);
 			sound = MiVerb.ar(sound, revtime, drywet, damping, hp, freeze, diffusion) * mul;
-			Out.ar(out, Pan2.ar(sound);
+			Out.ar(out, Pan2.ar(sound));
 		}).add;
 
     context.server.sync;
@@ -40,7 +40,7 @@ var <synth;
 			\strength, 0.5,
 			\env, 0.5,
 			\rotate, 0.2,
-			\space, 0.5
+			\space, 0.5,
 			\mul, 0.5,
 			\add, 0,
 			\revtime, 0.5,
