@@ -8,6 +8,11 @@ local wave_shapes = {"sine", "saw", "chaos"}
 local ratio1 = 0.2
 local fm1 = 0.1
 local detune = 0.25
+local ratio2 = 0.2
+local fm2 = 0.1
+local fbx = 0.0
+
+
 
 
 function init()
@@ -97,6 +102,38 @@ params:add_group("*fm1", 3)
   params:add{type = "control", id = "fm1_mod_amt", name = "fm1 mod amount",
     controlspec = cs.new(0.00, 1.00, "lin", 0.01, 0.00, ""), action = engine.fm1_mod_amt}
 
+  params:add_group("*fm2", 3)
+  params:add_option("fm2_mod_sel", "waveshape", wave_shapes, 1)
+  params:set_action("fm2_mod_sel", function(x) engine.fm2_mod_sel(x) end)
+  params:add{type = "control", id = "fm2_mod_freq", name = "fm2 mod speed",
+    controlspec = cs.new(0.01, 1000.00, "exp", 0.01, 0.5, ""), action = engine.fm2_mod_freq}
+  params:add{type = "control", id = "fm2_mod_amt", name = "fm2 mod amount",
+    controlspec = cs.new(0.00, 1.00, "lin", 0.01, 0.00, ""), action = engine.fm2_mod_amt}
+
+  params:add_group("*C:M FM1", 3)
+  params:add_option("ratio1_mod_sel", "waveshape", wave_shapes, 1)
+  params:set_action("ratio1_mod_sel", function(x) engine.ratio1_mod_sel(x) end)
+  params:add{type = "control", id = "ratio1_mod_freq", name = "ratio1 fm1 mod speed",
+    controlspec = cs.new(0.01, 20.00, "lin", 0.01, 0.5, ""), action = engine.ratio1_mod_freq}
+  params:add{type = "control", id = "ratio1_mod_amt", name = "ratio1 fm1 mod amount",
+    controlspec = cs.new(0.00, 1.00, "lin", 0.01, 0.00, ""), action = engine.ratio1_mod_amt}
+  
+  params:add_group("*C:M FM2", 3)
+  params:add_option("ratio2_mod_sel", "waveshape", wave_shapes, 1)
+  params:set_action("ratio2_mod_sel", function(x) engine.ratio2_mod_sel(x) end)
+  params:add{type = "control", id = "ratio2_mod_freq", name = "ratio2 fm2 mod speed",
+    controlspec = cs.new(0.01, 20.00, "lin", 0.01, 0.5, ""), action = engine.ratio2_mod_freq}
+  params:add{type = "control", id = "ratio2_mod_amt", name = "ratio2 fm2 mod amount",
+    controlspec = cs.new(0.00, 1.00, "lin", 0.01, 0.00, ""), action = engine.ratio2_mod_amt}
+
+  params:add_group("*fbx", 3)
+  params:add_option("fbx_mod_sel", "waveshape", wave_shapes, 1)
+  params:set_action("fbx_mod_sel", function(x) engine.fbx_mod_sel(x) end)
+  params:add{type = "control", id = "fbx_mod_freq", name = "fbx fm2 mod speed",
+    controlspec = cs.new(0.01, 1000.00, "exp", 0.01, 0.5, ""), action = engine.fbx_mod_freq}
+  params:add{type = "control", id = "fbx_mod_amt", name = "fbx fm2 mod amount",
+    controlspec = cs.new(0.00, 1.00, "lin", 0.01, 0.00, ""), action = engine.fbx_mod_amt}
+  
 params:add_group("*detune fm2", 3)
   params:add_option("detune_mod_sel", "waveshape", wave_shapes, 1)
   params:set_action("detune_mod_sel", function(x) engine.detune_mod_sel(x) end)
@@ -105,13 +142,10 @@ params:add_group("*detune fm2", 3)
   params:add{type = "control", id = "detune_mod_amt", name = "detune fm2 mod amount",
     controlspec = cs.new(0.00, 1.00, "lin", 0.01, 0.00, ""), action = engine.detune_mod_amt}
 
-params:add_group("*C:M FM1", 3)
-  params:add_option("ratio1_mod_sel", "waveshape", wave_shapes, 1)
-  params:set_action("ratio1_mod_sel", function(x) engine.ratio1_mod_sel(x) end)
-  params:add{type = "control", id = "ratio1_mod_freq", name = "ratio1 fm1 mod speed",
-    controlspec = cs.new(0.01, 20.00, "lin", 0.01, 0.5, ""), action = engine.ratio1_mod_freq}
-  params:add{type = "control", id = "ratio1_mod_amt", name = "ratio1 fm1 mod amount",
-    controlspec = cs.new(0.00, 1.00, "lin", 0.01, 0.00, ""), action = engine.ratio1_mod_amt}
+
+  
+  
+  
 
 
 params:add_separator ("Reverb")
@@ -146,6 +180,18 @@ detune_poll.time = 0.025
 local fm1_poll = poll.set("sendlfo3", function(val)   fm1 = val end)
 fm1_poll:start()
 fm1_poll.time = 0.025
+  
+local ratio2_poll = poll.set("sendlfo4", function(val)   ratio1 = val end)
+ratio2_poll:start()
+ratio2_poll.time = 0.025
+
+local fxb_poll = poll.set("sendlfo5", function(val)   detune = val end)
+fxb_poll:start()
+fxb_poll.time = 0.025
+
+local fm2_poll = poll.set("sendlfo6", function(val)   fm1 = val end)
+fm2_poll:start()
+fm2_poll.time = 0.025
 
 
 
@@ -345,16 +391,16 @@ function redraw()
   level2_enc:set_value(params:get("level2"))
   level2_enc:redraw()
   
-   fm2_enc:set_value(params:get("fm2"))
+   fm2_enc:set_value(fm2)
   fm2_enc:redraw()
   
-  ratio2_enc:set_value(params:get("ratio2"))
+  ratio2_enc:set_value(ratio2)
   ratio2_enc:redraw()
   
    fb_enc:set_value(params:get("fb"))
   fb_enc:redraw()
   
-  fbx_enc:set_value(params:get("fbx"))
+  fbx_enc:set_value(fbx)
   fbx_enc:redraw()
   
   filter_mode_enc:set_value(params:get("filter_mode"))
