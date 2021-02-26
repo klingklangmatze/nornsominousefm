@@ -1,4 +1,4 @@
-engine.name = "ominousefm2"
+  engine.name = "ominousefm2"
 local UI = require "ui"
 
 local enc_row = 1
@@ -181,15 +181,15 @@ local fm1_poll = poll.set("sendlfo3", function(val)   fm1 = val end)
 fm1_poll:start()
 fm1_poll.time = 0.025
   
-local ratio2_poll = poll.set("sendlfo4", function(val)   ratio1 = val end)
+local ratio2_poll = poll.set("sendlfo4", function(val)   ratio2 = val end)
 ratio2_poll:start()
 ratio2_poll.time = 0.025
 
-local fxb_poll = poll.set("sendlfo5", function(val)   detune = val end)
-fxb_poll:start()
-fxb_poll.time = 0.025
+local fbx_poll = poll.set("sendlfo5", function(val)   fbx = val end)
+fbx_poll:start()
+fbx_poll.time = 0.025
 
-local fm2_poll = poll.set("sendlfo6", function(val)   fm1 = val end)
+local fm2_poll = poll.set("sendlfo6", function(val)   fm2 = val end)
 fm2_poll:start()
 fm2_poll.time = 0.025
 
